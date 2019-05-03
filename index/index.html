@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <link rel="stylesheet" href="../assets/css/bootstrap.css">
+  <!-- <link rel="stylesheet" href="assets/css/about.css">
+  <link rel="stylesheet" href="assets/css/github.css"> -->
+
+<style>
+  body {
+    font-family: system, -apple-system, '.SFNSText-Regular', 'SF UI Text', 'Lucida Grande', 'Segoe UI', Ubuntu, Cantarell, sans-serif;
+    color: #fff;
+    background-color: #8aba87;
+    text-align: center;
+    font-size: 40px;
+  }
+  
+  h2 {
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  #close {
+    color: white;
+    opacity: 0.7;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    text-decoration: none;
+  }
+  
+  </style>
+  </head>
+  <body>
+  <main class="content js-content">
+    <div class="container">
+      <section id="windows-section" class="section js-section u-category-windows">
+        <header class="section-header">
+          <div class="section-wrapper" style="text-align: center;">
+            <!-- <h1>
+              Time Logger and Lapse
+            </h1> -->
+            <h3>Welcome to the <code>Internal DevDuo </code> Time Lapse</h3>
+  
+            <h6>Just click the <code>start </code> button to start working.</h6>
+  
+            <!-- <h6>Open the <a href="http://internal.devduo.com/time">full app documentation<span class="u-visible-to-screen-reader">(opens in new window)</span></a> in your browser.</h6> -->
+          </div>
+        </header>
+  
+        <div class="demo">
+          <div class="demo-wrapper">
+            <div class="demo-box">
+              <div class="demo-controls">
+                <button class="btn btn-primary demo-button" id="start-btn">Start Work</button>
+              </div>
+              <!-- <pre><code data-path="renderer-process/windows/create-window.js"></code></pre> -->
+  
+            </div>
+          </div>
+        </div>
+        <div id="work-status" class="timer"></div>
+
+        <script type="text/javascript">
+          require('./index.renderer')
+        </script>
+      </section>
+    </div>
+</main>
+</body>
+</html>
