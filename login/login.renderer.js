@@ -1,6 +1,8 @@
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
+var nodeConsole = require('console');
+var myConsole = new nodeConsole.Console(process.stdout, process.stderr);
 
 require('dotenv').config();
 var crypto = require('crypto');
@@ -34,22 +36,26 @@ console.log(store.get('user'));
 
 function action() {
   document.querySelector('#next-btn').addEventListener('click', () => {
+    myConsole.log('next button pressed')
     user = document.querySelector('#email').value;
     email = user + '@' + process.env.domain;
     store.set('user.id', user)
+
+    myConsole.log('Email: ' + email)
     
     code = Math.floor(100000 + Math.random() * 900000);
-
-    console.log(code);
+    myConsole.log(code)
     var hashed_code = crypto.createHash('md5').update(code.toString()).digest('hex');
 
     store.set('user.hashed_code',  hashed_code );
 
     subject = 'Internal DevDuo Code - ' + code;
 
+    myConsole.log(process.env.SENDGRID_API_KEY)
+
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
     var msg = {
-      to: email,
+      to: 'kentaxito@gmail.com',
       from: 'internal@devduo.com',
       subject: subject,
       text: 'Your login code is: <code> ' + code + ' </code>',
