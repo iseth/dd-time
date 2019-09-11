@@ -4,6 +4,7 @@
 var nodeConsole = require('console');
 var myConsole = new nodeConsole.Console(process.stdout, process.stderr);
 
+
 require('dotenv').config();
 var crypto = require('crypto');
 const {app, BrowserWindow} = require('electron').remote
@@ -55,7 +56,7 @@ function action() {
 
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
     var msg = {
-      to: 'kentaxito@gmail.com',
+      to: email,
       from: 'internal@devduo.com',
       subject: subject,
       text: 'Your login code is: <code> ' + code + ' </code>',
