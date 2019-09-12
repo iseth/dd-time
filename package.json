@@ -27,7 +27,6 @@
       "out"
     ],
     "mac": {
-      "copyright": "Copyright © year ${author}",
       "icon": "assets/icons/mac/icon.icns",
       "darkModeSupport": true,
       "type": "distribution",
@@ -55,15 +54,11 @@
     }
   },
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/iseth/dd-time.git"
+    "type": "git",
+    "url": "https://github.com/iseth/dd-time.git"
   },
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "timelapser"
   ],
   "author": "GitHub",
   "license": "CC0-1.0",

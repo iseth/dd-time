@@ -1,4 +1,4 @@
-appId: com.devduo.time1
+appId: com.devduo.timelapser
 publish:
   provider: github
   token: 1ded117c8361d1d403b41b635970d3931eb12d5f
