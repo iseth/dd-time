@@ -1,6 +1,7 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow, ipcMain} = require('electron')
 const Store  = require('electron-store');
+const { autoUpdater } = require('electron-updater');
 
 require('update-electron-app')({
   repo: 'devduo/timelapse',
