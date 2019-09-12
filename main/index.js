@@ -50,6 +50,10 @@ const { autoUpdater } = require('electron-updater');
     if (mainWindow === null) createWindow()
   })
 
+  ipcMain.on('app_version', (event) => {
+    event.sender.send('app_version', { version: app.getVersion() });
+  });
+
   // In this file you can include the rest of your app's specific main process
   // code. You can also put them in separate files and require them here.
   autoUpdater.on('update-available', () => {
