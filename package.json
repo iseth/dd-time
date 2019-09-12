@@ -1,6 +1,6 @@
 {
   "name": "dd-timelaper",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "DevDuo Internal",
   "main": "main/index.js",
   "scripts": {
