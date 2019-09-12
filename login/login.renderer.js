@@ -37,12 +37,10 @@ console.log(store.get('user'));
 
 function action() {
   document.querySelector('#next-btn').addEventListener('click', () => {
-    myConsole.log('next button pressed')
+
     user = document.querySelector('#email').value;
     email = user + '@' + process.env.domain;
     store.set('user.id', user)
-
-    myConsole.log('Email: ' + email)
     
     code = Math.floor(100000 + Math.random() * 900000);
     myConsole.log(code)
@@ -51,8 +49,6 @@ function action() {
     store.set('user.hashed_code',  hashed_code );
 
     subject = 'Internal DevDuo Code - ' + code;
-
-    myConsole.log(process.env.SENDGRID_API_KEY)
 
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
     var msg = {
