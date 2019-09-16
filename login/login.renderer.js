@@ -1,9 +1,5 @@
-// This file is required by the index.html file and will
-// be executed in the renderer process for that window.
-// All of the Node.js APIs are available in this process.
 var nodeConsole = require('console');
 var myConsole = new nodeConsole.Console(process.stdout, process.stderr);
-
 
 require('dotenv').config();
 var crypto = require('crypto');
@@ -32,8 +28,6 @@ const schema = {
 };
 
 const store = new Store({schema});
-
-console.log(store.get('user'));
 
 function action() {
   document.querySelector('#next-btn').addEventListener('click', () => {

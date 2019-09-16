@@ -1,5 +1,7 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
 const { autoUpdater } = require('electron-updater');
+var nodeConsole = require('console');
+var myConsole = new nodeConsole.Console(process.stdout, process.stderr);
   // Keep a global reference of the window object, if you don't, the window will
   // be closed automatically when the JavaScript object is garbage collected.
   let mainWindow
@@ -67,3 +69,7 @@ const { autoUpdater } = require('electron-updater');
   ipcMain.on('restart_app', () => {
     autoUpdater.quitAndInstall();
   });
+
+  ipcMain.on('logout', ()=> {
+    mainWindow.loadFile('login/login.html')
+  })
