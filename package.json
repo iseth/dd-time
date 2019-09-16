@@ -1,8 +1,8 @@
 {
   "name": "dd-timelaper",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "DevDuo Internal",
-  "main": "main/index.js",
+  "main": "main/app.js",
   "scripts": {
     "start": "electron .",
     "pack": "build --dir",
