@@ -1,10 +1,15 @@
-const { desktopCapturer, screen, shell } = require('electron');
+const { app, desktopCapturer, screen, shell } = require('electron').remote;
+const {ipcRenderer} = require('electron')
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const AWS = require('aws-sdk');
 const Store  = require('electron-store');
-const store = new Store();
+//worried this may only work on windows due to OSX path structure
+store = new Store(app.getPath('userData') + '/config.json')
+
+var nodeConsole = require('console');
+var myConsole = new nodeConsole.Console(process.stdout, process.stderr);
 
 require('dotenv').config();
 
@@ -96,7 +101,7 @@ function toggleStartBtn() {
   group_date = new Date().getFullYear() + "-" + (parseInt(new Date().getMonth()+1)) + "-" + new Date().getDate() + "@" + new Date().getHours() + ":" + new Date().getMinutes()
   hasStarted = !hasStarted;
   if (hasStarted) {
-    document.getElementById('work-status').textContent = "Start coding!!! :)<br> Work has started"
+    document.getElementById('work-status').textContent = "Start coding!!! :) Work has started"
     randomInterval = randomIntFromInterval(startTimeInterval, endTimeInterval);
     document.getElementById('start-btn').textContent = 'Stop Work';
     cron();
@@ -119,7 +124,19 @@ function determineScreenShotSize() {
 }
 
 const newWindowBtn = document.getElementById('start-btn');
+const logoutBtn = document.getElementById('logout-btn');
+
+
+function logout() {
+  store.delete('user.session_stamp')
+  store.delete('user.hashed_code')
+  ipcRenderer.send('logout')
+}
 
 newWindowBtn.addEventListener('click', event => {
   toggleStartBtn();
+});
+
+logoutBtn.addEventListener('click', event => {
+  logout();
 });
