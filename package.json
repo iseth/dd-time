@@ -65,15 +65,15 @@
     "electron-packager": "^13.1.1"
   },
   "dependencies": {
-    "@sendgrid/mail": "^6.3.1",
-    "aws-sdk": "^2.438.0",
+    "@sendgrid/mail": "^6.4.0",
+    "aws-sdk": "^2.530.0",
     "crypto": "^1.0.1",
     "dotenv": "^7.0.0",
     "electron-better-ipc": "^0.2.0",
-    "electron-log": "^3.0.5",
+    "electron-log": "^3.0.8",
     "electron-packager-interactive": "^0.1.3",
-    "electron-store": "^3.2.0",
+    "electron-store": "^3.3.0",
     "electron-updater": "^4.1.2",
-    "update-electron-app": "^1.3.0"
+    "update-electron-app": "^1.5.0"
   }
 }
