@@ -1,5 +1,5 @@
-const { app, desktopCapturer, screen, shell } = require('electron').remote;
-const {ipcRenderer} = require('electron')
+const { app, screen, shell } = require('electron').remote;
+const {ipcRenderer, desktopCapturer} = require('electron')
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -7,9 +7,6 @@ const AWS = require('aws-sdk');
 const Store  = require('electron-store');
 //worried this may only work on windows due to OSX path structure
 store = new Store(app.getPath('userData') + '/config.json')
-
-var nodeConsole = require('console');
-var myConsole = new nodeConsole.Console(process.stdout, process.stderr);
 
 require('dotenv').config();
 
@@ -23,13 +20,14 @@ const key = process.env.do_space_key; // move to some secure place
 const token = process.env.do_space_token; // move to some secure place
 const startTimeInterval = 15000; // add to configuration
 const endTimeInterval = 30000; // add to configuration
+var active = false;
 
 function takeScreenShot() {
   // screenshotMsg.textContent = 'Gathering screens...'
   console.log('Gathering screens...');
   const thumbSize = determineScreenShotSize();
   let options = { types: ['screen'], thumbnailSize: thumbSize };
-//   const spacesEndpoint = new AWS.Endpoint('space.alteredstack.com/');
+  //const spacesEndpoint = new AWS.Endpoint('space.alteredstack.com/');
   const spacesEndpoint = new AWS.Endpoint('ams3.digitaloceanspaces.com');
 
   desktopCapturer.getSources(options, (error, sources) => {
@@ -46,25 +44,26 @@ function takeScreenShot() {
             const s3 = new AWS.S3({
               endpoint: spacesEndpoint,
               accessKeyId: key,
-              secretAccessKey: token,
+              secretAccessKey: token
             });
 
             const params = {
               Body: fs.readFileSync(screenshotPath),
-              Bucket: `alteredstack/dd/` + store.get("user.id") + '/' + group_date,
+              Bucket: 'alteredstack/dd/' + store.get("user.id") + '/' + group_date,
               Key: fileName,
             };
 
+            console.log(params)
+
             s3.putObject(params, function(err, data) {
-              if (err) console.log(err, err.stack);
-              else console.log(data);
+              if (err) console.log(err, err.stack)
+              else console.log(data)
             });
 
             const message = `Saved screenshot to: ${screenshotPath}`;
             // screenshotMsg.textContent = message
             console.log(message);
-          },
-        );
+        });
       }
     });
   });
@@ -134,9 +133,47 @@ function logout() {
 }
 
 newWindowBtn.addEventListener('click', event => {
-  toggleStartBtn();
+  active = !active
+  if (active) {
+    console.log('running inactivity timer')
+    toggleStartBtn();
+    inactivityTimer();
+  } else {
+    console.log('switching active state and not running inactivity timer')
+    toggleStartBtn();
+  }
 });
 
 logoutBtn.addEventListener('click', event => {
   logout();
 });
+
+//stupid me didn't even think that we need OS inactivity because developers will not actually be interacting with the timelapser DOM
+const inactivityTimer = () => {
+  var t;
+  document.onload = resetTimer;
+  document.onmousemove = resetTimer;
+  document.onmousedown = resetTimer;  // catches touchscreen presses as well      
+  document.ontouchstart = resetTimer; // catches touchscreen swipes as well 
+  document.onclick = resetTimer;      // catches touchpad clicks as well
+  document.onkeypress = resetTimer;   
+  document.addEventListener('scroll', resetTimer, true); //document.onscroll doesn't work very well
+
+  function inactive() {
+      document.onload = 'undefined'
+      document.onmousemove = 'undefined';
+      document.onmousedown = 'undefined';    
+      document.ontouchstart = 'undefined';
+      document.onclick = 'undefined';    
+      document.onkeypress = 'undefined';   
+      document.addEventListener('scroll', () => {}, false); 
+      console.log('You are inactive')
+  }
+
+  function resetTimer() {
+      clearTimeout(t);
+      t = setTimeout(inactive, 10000);  // time is in milliseconds
+  }
+}
+
+
