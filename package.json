@@ -9,6 +9,8 @@
     "dist": "build",
     "build:wl": "electron-builder build --win --linux --publish never",
     "deploy:wl": "electron-builder build --win --linux --publish always",
+    "build:linux": "electron-builder build --linux --publish never",
+    "deploy:linux": "electron-builder build --linux --publish always",
     "build": "electron-builder build --win --publish never",
     "deploy:win": "electron-builder build --win --publish always",
     "deploy:mac": "electron-builder build --win --publish always",
@@ -50,7 +52,7 @@
     },
     "linux": {
       "target": [
-        "rpm",
+        "AppImage",
         "deb"
       ]
     },
@@ -68,7 +70,7 @@
   "keywords": [
     "timelapser"
   ],
-  "author": "GitHub",
+  "author": "DevDuo <internal@devduo.com>",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^4.2.10",
