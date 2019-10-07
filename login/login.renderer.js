@@ -1,15 +1,14 @@
+require('dotenv').config();
+
 var nodeConsole = require('console');
 var myConsole = new nodeConsole.Console(process.stdout, process.stderr);
 
-require('dotenv').config();
+var config = require('../main/config/config.json');
 var crypto = require('crypto');
 const {app, BrowserWindow} = require('electron').remote
-// const {ipcRenderer: ipc} = require('electron');
 const {ipcRenderer} = require('electron')
 const sgMail = require('@sendgrid/mail');
-// const Store = require('../../src/store.js');
 const Store = require('electron-store');
-
 const path = require('path')
 
 const schema = {
@@ -31,9 +30,9 @@ const store = new Store({schema});
 
 function action() {
   document.querySelector('#next-btn').addEventListener('click', () => {
-
+    myConsole.log(config.domain)
     user = document.querySelector('#email').value;
-    email = user + '@' + process.env.domain;
+    email = user + '@' + config.domain;
     store.set('user.id', user)
     
     code = Math.floor(100000 + Math.random() * 900000);
@@ -44,7 +43,7 @@ function action() {
 
     subject = 'Internal DevDuo Code - ' + code;
 
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    sgMail.setApiKey(config.SENDGRID_API_KEY);
     var msg = {
       to: email,
       from: 'internal@devduo.com',
