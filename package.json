@@ -1,5 +1,5 @@
 {
-  "name": "dd-timelaper",
+  "name": "dd-timelapser",
   "version": "1.1.2",
   "description": "DevDuo Internal",
   "main": "main/app.js",
@@ -9,6 +9,8 @@
     "dist": "build",
     "build:wl": "electron-builder build --win --linux --publish never",
     "deploy:wl": "electron-builder build --win --linux --publish always",
+    "build:linux": "electron-builder build --linux --publish never",
+    "deploy:linux": "electron-builder build --linux --publish always",
     "build": "electron-builder build --win --publish never",
     "deploy:win": "electron-builder build --win --publish always",
     "deploy:mac": "electron-builder build --win --publish always",
@@ -22,11 +24,12 @@
     "package:sign-installer": "signcode './out/windows-installer/ElectronAPIDemosSetup.exe' --cert ~/electron-api-demos.p12 --prompt --name 'Electron API Demos' --url 'http://electron.atom.io'",
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
     "package-win": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Electron Tutorial App\"",
-    "package-linux": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds"
+    "package-linux": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds",
+    "postinstall": "electron-builder install-app-deps"
   },
   "build": {
     "appId": "com.devduo.timelapser",
-    "productName": "Timelapse",
+    "productName": "Timelapser",
     "mac": {
       "icon": "assets/icons/mac/icon.icns",
       "darkModeSupport": true,
@@ -48,7 +51,13 @@
       ]
     },
     "linux": {
-      "category": "Development"
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target" : "NSIS"
     },
     "nsis": {
       "createDesktopShortcut": "always"
@@ -61,7 +70,7 @@
   "keywords": [
     "timelapser"
   ],
-  "author": "GitHub",
+  "author": "DevDuo <internal@devduo.com>",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^4.2.10",

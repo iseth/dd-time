@@ -1,5 +1,6 @@
 const { app, screen, shell } = require('electron').remote;
 const {ipcRenderer, desktopCapturer} = require('electron')
+var config = require('../main/config/config.json');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -16,8 +17,8 @@ var hasStarted = false;
 var cronInterval = 0;
 let randomInterval = 0;
 var counter = 0;
-const key = process.env.do_space_key; // move to some secure place
-const token = process.env.do_space_token; // move to some secure place
+const key = config.do_space_key; // move to some secure place
+const token = config.do_space_token; // move to some secure place
 const startTimeInterval = 15000; // add to configuration
 const endTimeInterval = 30000; // add to configuration
 var active = false;

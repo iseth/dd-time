@@ -4,3 +4,4 @@ release-builds/*
 dist/*
 .env
 electron-builder.yml
+main/config/config.json
