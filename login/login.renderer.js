@@ -30,7 +30,6 @@ const store = new Store({schema});
 
 function action() {
   document.querySelector('#next-btn').addEventListener('click', () => {
-    myConsole.log(config.domain)
     user = document.querySelector('#email').value;
     email = user + '@' + config.domain;
     store.set('user.id', user)
@@ -51,7 +50,9 @@ function action() {
       text: 'Your login code is: <code> ' + code + ' </code>',
       html: 'Your login code is: <code> ' + code + ' </code>',
     };
-    sgMail.send(msg);
+    sgMail.send(msg)
+    .then((response) => myConsole.log(response))
+    .catch((error) => myConsole.log(error))
 
     var x = document.getElementById("login-form");
     if (x.style.display === "none") {
