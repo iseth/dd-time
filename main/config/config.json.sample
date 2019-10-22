@@ -1,0 +1,6 @@
+{
+    "SENDGRID_API_KEY" : "enter key here",
+    "domain" : "devduo.com",
+    "do_space_key" : "enter key here",
+    "do_space_token" : "enter key here"
+}
