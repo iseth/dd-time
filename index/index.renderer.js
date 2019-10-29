@@ -1,6 +1,9 @@
+var nodeConsole = require('console');
+var myConsole = new nodeConsole.Console(process.stdout, process.stderr);
+
 const { app, screen, shell } = require('electron').remote;
 const {ipcRenderer, desktopCapturer} = require('electron')
-var config = require('../main/config/config.json');
+var config = require('../config/config.json');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -8,8 +11,6 @@ const AWS = require('aws-sdk');
 const Store  = require('electron-store');
 //worried this may only work on windows due to OSX path structure
 store = new Store(app.getPath('userData') + '/config.json')
-
-require('dotenv').config();
 
 var group_date = "";
 var hasStarted = false;
@@ -57,8 +58,8 @@ function takeScreenShot() {
             console.log(params)
 
             s3.putObject(params, function(err, data) {
-              if (err) console.log(err, err.stack)
-              else console.log(data)
+              if (err) myConsole.log(err, err.stack)
+              else myConsole.log(data)
             });
 
             const message = `Saved screenshot to: ${screenshotPath}`;
@@ -126,13 +127,6 @@ function determineScreenShotSize() {
 const newWindowBtn = document.getElementById('start-btn');
 const logoutBtn = document.getElementById('logout-btn');
 
-
-function logout() {
-  store.delete('user.session_stamp')
-  store.delete('user.hashed_code')
-  ipcRenderer.send('logout')
-}
-
 newWindowBtn.addEventListener('click', event => {
   active = !active
   if (active) {
@@ -145,6 +139,12 @@ newWindowBtn.addEventListener('click', event => {
   }
 });
 
+function logout() {
+    store.delete('user.session_stamp')
+    store.delete('user.hashed_code')
+    ipcRenderer.send('logout')
+}
+
 logoutBtn.addEventListener('click', event => {
   logout();
 });
@@ -154,20 +154,20 @@ const inactivityTimer = () => {
   var t;
   document.onload = resetTimer;
   document.onmousemove = resetTimer;
-  document.onmousedown = resetTimer;  // catches touchscreen presses as well      
-  document.ontouchstart = resetTimer; // catches touchscreen swipes as well 
+  document.onmousedown = resetTimer;  // catches touchscreen presses as well
+  document.ontouchstart = resetTimer; // catches touchscreen swipes as well
   document.onclick = resetTimer;      // catches touchpad clicks as well
-  document.onkeypress = resetTimer;   
+  document.onkeypress = resetTimer;
   document.addEventListener('scroll', resetTimer, true); //document.onscroll doesn't work very well
 
   function inactive() {
       document.onload = 'undefined'
       document.onmousemove = 'undefined';
-      document.onmousedown = 'undefined';    
+      document.onmousedown = 'undefined';
       document.ontouchstart = 'undefined';
-      document.onclick = 'undefined';    
-      document.onkeypress = 'undefined';   
-      document.addEventListener('scroll', () => {}, false); 
+      document.onclick = 'undefined';
+      document.onkeypress = 'undefined';
+      document.addEventListener('scroll', () => {}, false);
       console.log('You are inactive')
   }
 

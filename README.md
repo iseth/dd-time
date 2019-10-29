@@ -1,1 +1,0 @@
-This is a devduo program to take screenshots during development.
