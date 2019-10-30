@@ -25,16 +25,11 @@ const endTimeInterval = 30000; // add to configuration
 var active = false;
 
 function takeScreenShot() {
-  // screenshotMsg.textContent = 'Gathering screens...'
   console.log('Gathering screens...');
   const thumbSize = determineScreenShotSize();
   let options = { types: ['screen'], thumbnailSize: thumbSize };
-  //const spacesEndpoint = new AWS.Endpoint('space.alteredstack.com/');
   const spacesEndpoint = new AWS.Endpoint('ams3.digitaloceanspaces.com');
-
-  desktopCapturer.getSources(options, (error, sources) => {
-    if (error) return console.log(error);
-
+  desktopCapturer.getSources(options).then(async sources => {
     sources.forEach(source => {
       if (source.name === 'Entire screen' || source.name === 'Screen 1') {
         const fileName = `screenshot-${new Date().getTime()}.png`;
@@ -42,7 +37,6 @@ function takeScreenShot() {
 
         fs.writeFile(screenshotPath, source.thumbnail.toPNG(), (error, data) => {
             if (error) return console.log(error);
-
             const s3 = new AWS.S3({
               endpoint: spacesEndpoint,
               accessKeyId: key,
@@ -55,13 +49,11 @@ function takeScreenShot() {
               Key: fileName,
             };
 
-            console.log(params)
-
             s3.putObject(params, function(err, data) {
               if (err) myConsole.log(err, err.stack)
               else myConsole.log(data)
             });
-
+            
             const message = `Saved screenshot to: ${screenshotPath}`;
             // screenshotMsg.textContent = message
             console.log(message);
@@ -102,11 +94,15 @@ function toggleStartBtn() {
   group_date = new Date().getFullYear() + "-" + (parseInt(new Date().getMonth()+1)) + "-" + new Date().getDate() + "@" + new Date().getHours() + ":" + new Date().getMinutes()
   hasStarted = !hasStarted;
   if (hasStarted) {
+    //prompts border to start and minimzes window
+    ipcRenderer.send('start-timelapse')
     document.getElementById('work-status').textContent = "Start coding!!! :) Work has started"
     randomInterval = randomIntFromInterval(startTimeInterval, endTimeInterval);
     document.getElementById('start-btn').textContent = 'Stop Work';
     cron();
   } else {
+    //prompts border to stop
+    ipcRenderer.send('stop-timelapse')
     document.getElementById('work-status').textContent = ""
     document.getElementById('start-btn').textContent = 'Start Work';
     clearInterval(cronInterval);

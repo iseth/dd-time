@@ -50,7 +50,7 @@ function action() {
       html: 'Your login code is: <code> ' + code + ' </code>',
     };
     sgMail.send(msg)
-    .then((response) => myConsole.log(response))
+    .then((response) => console.log(response))
     .catch((error) => myConsole.log(error))
 
     var x = document.getElementById("login-form");

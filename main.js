@@ -1,7 +1,8 @@
-const {app, BrowserWindow, ipcMain} = require('electron')
+const {app, BrowserWindow, ipcMain, screen} = require('electron')
 
 var mainWindow = null
 var login = null
+var border = null
 
 function createWindows() {
     mainWindow = new BrowserWindow({
@@ -30,6 +31,26 @@ function createWindows() {
     })
 
     login.loadFile('login/login.html')
+
+    const { width, height } = screen.getPrimaryDisplay().workAreaSize
+
+    border = new BrowserWindow({
+        frame: false,
+        toolbar: false,
+        transparent: true,
+        show: false,
+        width: width,
+        height: height,
+        resizable: false,
+        movable: false,
+        minimizable: false,
+        alwaysOnTop: true,
+        skipTaskbar: true
+    })
+    border.setMenu(null)
+    border.setIgnoreMouseEvents(true, {forward: true})
+    border.loadFile('index/border.html')
+
 }
 
 app.on('ready', createWindows)
@@ -50,10 +71,19 @@ app.on('activate', () => {
 
 ipcMain.on('login-success', (event, arg) => {
     if(arg == 'ping'){
-        console.log('ipcmain')
         mainWindow.show()
         login.hide()
     }
+})
+
+ipcMain.on('start-timelapse', () => {
+    border.show()
+    mainWindow.minimize()
+})
+
+ipcMain.on('stop-timelapse', () => {
+    border.hide()
+    mainWindow.restore()
 })
 
 ipcMain.on('logout', ()=> {
