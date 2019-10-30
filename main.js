@@ -32,6 +32,9 @@ function createWindows() {
 
     login.loadFile('login/login.html')
 
+}
+
+function createBorder() {
     const { width, height } = screen.getPrimaryDisplay().workAreaSize
 
     border = new BrowserWindow({
@@ -50,8 +53,9 @@ function createWindows() {
     border.setMenu(null)
     border.setIgnoreMouseEvents(true, {forward: true})
     border.loadFile('index/border.html')
-
 }
+
+app.disableHardwareAcceleration()
 
 app.on('ready', createWindows)
 
@@ -71,6 +75,7 @@ app.on('activate', () => {
 
 ipcMain.on('login-success', (event, arg) => {
     if(arg == 'ping'){
+        createBorder()
         mainWindow.show()
         login.hide()
     }
