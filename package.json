@@ -10,13 +10,15 @@
     "build:linux": "electron-builder build --linux --publish never"
   },
   "build": {
-    "appId" : "com.devduo.timelapser",
+    "appId": "com.devduo.timelapser",
     "productName": "Timelapser",
     "win": {
       "target": "nsis"
     },
     "linux": {
-      "target": ["snap"]
+      "target": [
+        "snap"
+      ]
     }
   },
   "author": "",

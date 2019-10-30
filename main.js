@@ -55,6 +55,7 @@ function createBorder() {
     border.loadFile('index/border.html')
 }
 
+//required for border to work on Linux
 app.disableHardwareAcceleration()
 
 app.on('ready', createWindows)
