@@ -61,7 +61,9 @@ function takeScreenShot() {
             console.log(message);
         });
       }
-
+      else {
+          console.log("failed to get source")
+      }
     });
   });
 }
