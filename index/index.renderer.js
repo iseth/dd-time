@@ -31,14 +31,15 @@ function takeScreenShot() {
   const spacesEndpoint = new AWS.Endpoint('ams3.digitaloceanspaces.com');
   desktopCapturer.getSources(options).then(async sources => {
     sources.forEach(source => {
+      console.log(source)
       if (source.name === 'Entire Screen' || source.name === 'Screen 1') {
         const fileName = `screenshot-${new Date().getTime()}.png`;
         const screenshotPath = path.join(os.tmpdir(), fileName);
 
         fs.writeFile(screenshotPath, source.thumbnail.toPNG(), (error, data) => {
             if (error) {
-		 console.log(error)
-		}
+              //console.log(error)
+		        } 
             const s3 = new AWS.S3({
               endpoint: spacesEndpoint,
               accessKeyId: key,

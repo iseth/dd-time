@@ -33,7 +33,6 @@ function action() {
     store.set('user.id', user)
     
     code = Math.floor(100000 + Math.random() * 900000);
-    myConsole.log(code)
     var hashed_code = crypt.createHash('md5').update(code.toString()).digest('hex');
 
     store.set('user.hashed_code',  hashed_code );
@@ -50,8 +49,8 @@ function action() {
       html: 'Your login code is: <code> ' + code + ' </code>',
     };
     sgMail.send(msg)
-    .then((response) => console.log(response))
-    .catch((error) => myConsole.log(error))
+    // .then((response) => myConsole.log(response))
+    // .catch((error) => myConsole.log(error))
 
     var x = document.getElementById("login-form");
 
