@@ -34,6 +34,9 @@
     "crypto": "^1.0.1",
     "electron-store": "^5.0.0",
     "fs": "0.0.1-security",
+    "imagemin": "^7.0.0",
+    "imagemin-optipng": "^7.1.0",
+    "imagemin-pngquant": "^8.0.0",
     "os": "^0.1.1",
     "path": "^0.12.7"
   }

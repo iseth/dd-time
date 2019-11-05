@@ -9,42 +9,54 @@ const os = require('os');
 const path = require('path');
 const AWS = require('aws-sdk');
 const Store  = require('electron-store');
+const imagemin = require('imagemin');
+const imageminPngquant = require('imagemin-pngquant');
 //worried this may only work on windows due to OSX path structure
 store = new Store(app.getPath('userData') + '/config.json')
 
 var group_date = "";
 var hasStarted = false;
-
 var cronInterval = 0;
 let randomInterval = 0;
-var counter = 0;
+
+//variables for logging
+var screenshotsTaken = 0
+var screenshotsSent = 0
+
 const key = config.do_space_key; // move to some secure place
 const token = config.do_space_token; // move to some secure place
 const startTimeInterval = 15000; // add to configuration
 const endTimeInterval = 30000; // add to configuration
 var active = false;
 
+//create endpoint
+const s3 = new AWS.S3({
+  endpoint: new AWS.Endpoint('ams3.digitaloceanspaces.com'),
+  accessKeyId: key,
+  secretAccessKey: token
+});
+
 function takeScreenShot() {
-  console.log('Gathering screens...');
   const thumbSize = determineScreenShotSize();
   let options = { types: ['screen'], thumbnailSize: thumbSize };
-  const spacesEndpoint = new AWS.Endpoint('ams3.digitaloceanspaces.com');
+
   desktopCapturer.getSources(options).then(async sources => {
     sources.forEach(source => {
-      console.log(source)
       if (source.name === 'Entire Screen' || source.name === 'Screen 1') {
         const fileName = `screenshot-${new Date().getTime()}.png`;
         const screenshotPath = path.join(os.tmpdir(), fileName);
 
-        fs.writeFile(screenshotPath, source.thumbnail.toPNG(), (error, data) => {
-            if (error) {
-              //console.log(error)
-		        } 
-            const s3 = new AWS.S3({
-              endpoint: spacesEndpoint,
-              accessKeyId: key,
-              secretAccessKey: token
-            });
+        fs.writeFile(screenshotPath, source.thumbnail.toPNG(), (error) => {
+          if (error) console.log(error)
+          else{ //success
+            screenshotsTaken += 1
+
+            //compress image
+            imagemin([screenshotPath], screenshotPath, {
+              plugins: [
+                imageminPngquant()
+              ]
+            })
 
             const params = {
               Body: fs.readFileSync(screenshotPath),
@@ -54,12 +66,20 @@ function takeScreenShot() {
 
             s3.putObject(params, function(err, data) {
               if (err) myConsole.log(err, err.stack)
-              else myConsole.log(data)
+              else {
+                screenshotsSent += 1
+                //File was sent to Digital Ocean and will be deleted from temp dir.
+                myConsole.log(data)
+
+                // fs.unlink(screenshotPath, (err) => {
+                //   if (err) {
+                //     console.error(err)
+                //   }
+                //   else console.log('File was sent and deleted from your temp file')
+                // })
+              }
             });
-            
-            const message = `Saved screenshot to: ${screenshotPath}`;
-            // screenshotMsg.textContent = message
-            console.log(message);
+          }
         });
       }
       else {
@@ -107,6 +127,7 @@ function toggleStartBtn() {
     document.getElementById('start-btn').textContent = 'Stop Work';
     cron();
   } else {
+    sendLogData()
     //prompts border to stop
     ipcRenderer.send('stop-timelapse')
     document.getElementById('work-status').textContent = ""
@@ -130,15 +151,7 @@ const newWindowBtn = document.getElementById('start-btn');
 const logoutBtn = document.getElementById('logout-btn');
 
 newWindowBtn.addEventListener('click', event => {
-  active = !active
-  if (active) {
-    console.log('running inactivity timer')
-    toggleStartBtn();
-    inactivityTimer();
-  } else {
-    console.log('switching active state and not running inactivity timer')
-    toggleStartBtn();
-  }
+  toggleStartBtn()
 });
 
 function logout() {
@@ -151,32 +164,27 @@ logoutBtn.addEventListener('click', event => {
   logout();
 });
 
-//stupid me didn't even think that we need OS inactivity because developers will not actually be interacting with the timelapser DOM
-const inactivityTimer = () => {
-  var t;
-  document.onload = resetTimer;
-  document.onmousemove = resetTimer;
-  document.onmousedown = resetTimer;  // catches touchscreen presses as well
-  document.ontouchstart = resetTimer; // catches touchscreen swipes as well
-  document.onclick = resetTimer;      // catches touchpad clicks as well
-  document.onkeypress = resetTimer;
-  document.addEventListener('scroll', resetTimer, true); //document.onscroll doesn't work very well
-
-  function inactive() {
-      document.onload = 'undefined'
-      document.onmousemove = 'undefined';
-      document.onmousedown = 'undefined';
-      document.ontouchstart = 'undefined';
-      document.onclick = 'undefined';
-      document.onkeypress = 'undefined';
-      document.addEventListener('scroll', () => {}, false);
-      console.log('You are inactive')
+function sendLogData() {
+  var log = {
+    'screenshotsTaken' : screenshotsTaken,
+    'screenshotsSent' : screenshotsSent
   }
 
-  function resetTimer() {
-      clearTimeout(t);
-      t = setTimeout(inactive, 10000);  // time is in milliseconds
-  }
+  console.log(log)
+
+  const params = {
+    Body: JSON.stringify(log),
+    Bucket: 'alteredstack/dd/' + store.get("user.id") + '/' + group_date,
+    Key: 'logdata.json',
+    ContentType: "application/json"
+  };
+
+  s3.putObject(params, function(err, data) {
+    console.log(JSON.stringify(err) + " " + JSON.stringify(data))
+  })
+
+  screenshotsTaken = 0
+  screenshotsSent = 0
 }
 
 
