@@ -25,7 +25,8 @@
   "license": "ISC",
   "devDependencies": {
     "dotenv": "^8.2.0",
-    "electron-builder": "^22.1.0"
+    "electron-builder": "^22.1.0",
+    "node-abi": "^2.12.0"
   },
   "dependencies": {
     "@sendgrid/mail": "^6.4.0",
@@ -34,7 +35,23 @@
     "electron": "^6.0.0",
     "electron-store": "^5.1.0",
     "fs": "0.0.1-security",
+    "iohook": "^0.6.1",
     "os": "^0.1.1",
     "path": "^0.12.7"
+  },
+  "iohook": {
+    "targets": [
+      "node-72",
+      "electron-73"
+    ],
+    "platforms": [
+      "win32",
+      "darwin",
+      "linux"
+    ],
+    "arches": [
+      "x64",
+      "ia32"
+    ]
   }
 }

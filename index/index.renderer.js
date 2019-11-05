@@ -9,6 +9,7 @@ const os = require('os');
 const path = require('path');
 const AWS = require('aws-sdk');
 const Store  = require('electron-store');
+const ioHook = require('iohook')
 //worried this may only work on windows due to OSX path structure
 store = new Store(app.getPath('userData') + '/config.json')
 
@@ -190,3 +191,9 @@ function changeWorkInterface(hasStarted){
     document.getElementById('start-btn').textContent = 'Start Work';
   }
 }
+
+ioHook.on('keydown', event => {
+  keystrokes += 1
+});
+
+ioHook.start();
