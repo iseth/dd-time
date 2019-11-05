@@ -1,7 +1,3 @@
-node_modules
-release-builds/*
-.DS_Store
-dist/*
-.env
-electron-builder.yml
-main/config/config.json
+/node_modules
+/config/config.json
+/dist

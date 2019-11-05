@@ -1,10 +1,8 @@
-require('dotenv').config();
-
 var nodeConsole = require('console');
 var myConsole = new nodeConsole.Console(process.stdout, process.stderr);
 
-var config = require('../main/config/config.json');
-var crypto = require('crypto');
+var config = require('../config/config.json');
+var crypt = require('crypto');
 const {app, BrowserWindow} = require('electron').remote
 const {ipcRenderer} = require('electron')
 const sgMail = require('@sendgrid/mail');
@@ -35,14 +33,14 @@ function action() {
     store.set('user.id', user)
     
     code = Math.floor(100000 + Math.random() * 900000);
-    myConsole.log(code)
-    var hashed_code = crypto.createHash('md5').update(code.toString()).digest('hex');
+    var hashed_code = crypt.createHash('md5').update(code.toString()).digest('hex');
 
     store.set('user.hashed_code',  hashed_code );
 
     subject = 'Internal DevDuo Code - ' + code;
 
     sgMail.setApiKey(config.SENDGRID_API_KEY);
+
     var msg = {
       to: email,
       from: 'internal@devduo.com',
@@ -51,10 +49,11 @@ function action() {
       html: 'Your login code is: <code> ' + code + ' </code>',
     };
     sgMail.send(msg)
-    .then((response) => myConsole.log(response))
-    .catch((error) => myConsole.log(error))
+    // .then((response) => myConsole.log(response))
+    // .catch((error) => myConsole.log(error))
 
     var x = document.getElementById("login-form");
+
     if (x.style.display === "none") {
       x.style.display = "block";
     } else {
@@ -83,13 +82,13 @@ function action() {
 
   document.querySelector('#login-btn').addEventListener('click', () => {
     enteredCode = document.querySelector('#verify-code').value;
-    hashedEnteredCode = crypto.createHash('md5').update(enteredCode).digest('hex');
+    hashedEnteredCode = crypt.createHash('md5').update(enteredCode).digest('hex');
 
     hashed_code = store.get('user.hashed_code');
 
     if (hashedEnteredCode == hashed_code) {
       var elem = document.getElementById("progress-bar");
-      var id = setInterval(frame, 3); //change to 33
+      var id = setInterval(frame, 4); //change to 33
       var width = 1;
       function frame() {
         if (width >= 100) {
@@ -99,11 +98,8 @@ function action() {
             session_stamp = Date.now();
             store.set('user.session_stamp', session_stamp );
 
-            ipcRenderer.send('asynchronous-message', 'ping')
-                        
-            document.getElementById('close').click();
-            
-          // after progress finishes close login window
+            ipcRenderer.send('login-success', 'ping')
+
         } else {
           width++;
           elem.style.width = width + '%';
@@ -144,7 +140,10 @@ function action() {
   });
 
   // $('#theprogressbar').attr('aria-valuenow', newprogress).css('width', newprogress);
+  document.querySelector('#close').addEventListener('click', () => {
+      ipcRenderer.send('quit-button-pressed', 'ping')
 
+  })
 
 }
 
