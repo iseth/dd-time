@@ -41,6 +41,8 @@ function action() {
 
     sgMail.setApiKey(config.SENDGRID_API_KEY);
 
+    //myConsole.log(code)
+
     var msg = {
       to: email,
       from: 'internal@devduo.com',
@@ -49,8 +51,8 @@ function action() {
       html: 'Your login code is: <code> ' + code + ' </code>',
     };
     sgMail.send(msg)
-    // .then((response) => myConsole.log(response))
-    // .catch((error) => myConsole.log(error))
+    .then((response) => myConsole.log(response))
+    .catch((error) => myConsole.log(error))
 
     var x = document.getElementById("login-form");
 

@@ -9,8 +9,6 @@ const os = require('os');
 const path = require('path');
 const AWS = require('aws-sdk');
 const Store  = require('electron-store');
-const imagemin = require('imagemin');
-const imageminPngquant = require('imagemin-pngquant');
 //worried this may only work on windows due to OSX path structure
 store = new Store(app.getPath('userData') + '/config.json')
 
@@ -24,6 +22,7 @@ var screenshotsTaken = 0
 var screenshotsSent = 0
 var sessionTimer = process.hrtime()
 var elapsedSessionTime = 0
+var keystrokes = 0
 
 const key = config.do_space_key; // move to some secure place
 const token = config.do_space_token; // move to some secure place
@@ -38,12 +37,13 @@ const s3 = new AWS.S3({
   secretAccessKey: token
 });
 
-function takeScreenShot() {
+async function takeScreenShot() {
   const thumbSize = determineScreenShotSize();
   let options = { types: ['screen'], thumbnailSize: thumbSize };
 
   desktopCapturer.getSources(options).then(async sources => {
     sources.forEach(source => {
+      console.log(source)
       if (source.name === 'Entire Screen' || source.name === 'Screen 1') {
         const fileName = `screenshot-${new Date().getTime()}.png`;
         const screenshotPath = path.join(os.tmpdir(), fileName);
@@ -52,13 +52,6 @@ function takeScreenShot() {
           if (error) console.log(error)
           else{ //success
             screenshotsTaken += 1
-
-            //compress image
-            imagemin([screenshotPath], screenshotPath, {
-              plugins: [
-                imageminPngquant()
-              ]
-            })
 
             const params = {
               Body: fs.readFileSync(screenshotPath),
@@ -73,19 +66,19 @@ function takeScreenShot() {
                 //File was sent to Digital Ocean and will be deleted from temp dir.
                 myConsole.log(data)
 
-                // fs.unlink(screenshotPath, (err) => {
-                //   if (err) {
-                //     console.error(err)
-                //   }
-                //   else console.log('File was sent and deleted from your temp file')
-                // })
+                fs.unlink(screenshotPath, (err) => {
+                  if (err) {
+                    console.error(err)
+                  }
+                  else console.log('File was sent and deleted from your temp file')
+                })
               }
             });
           }
         });
       }
       else {
-          console.log("failed to get source")
+          console.log("Did not capture " + source)
       }
     });
   });
@@ -93,24 +86,9 @@ function takeScreenShot() {
 
 function cron() {
   if (hasStarted) {
-
-    // var d = new Date();
-
-    // var h = d.getHours();
-    // var m = d.getMinutes();
-
-    // h = (h < 10) ? "0" + h : h;
-    // m = (m < 10) ? "0" + m : m;
-
-    // console.log(h + ":" + m + "took screenshot ");
-
-    takeScreenShot();
-    // console.log("took screenshot");
-    
+    takeScreenShot();    
     randomInterval = randomIntFromInterval(startTimeInterval, endTimeInterval);
-    cronInterval = setTimeout(cron, randomInterval);
-    // console.log(randomInterval/1000);
-    
+    cronInterval = setTimeout(cron, randomInterval);    
   }
 }
 
@@ -121,22 +99,25 @@ function randomIntFromInterval(min, max) {
 function toggleStartBtn() {
   group_date = new Date().getFullYear() + "-" + (parseInt(new Date().getMonth()+1)) + "-" + new Date().getDate() + "@" + new Date().getHours() + ":" + new Date().getMinutes()
   hasStarted = !hasStarted;
+  changeWorkInterface(hasStarted)
   if (hasStarted) {
+    //reset logging
+    screenshotsTaken = 0
+    screenshotsSent = 0
+    keystrokes = 0
     //start timer
     sessionTimer = process.hrtime()
     //prompts border to start and minimzes window
     ipcRenderer.send('start-timelapse')
-    document.getElementById('work-status').textContent = "Start coding!!! :) Work has started"
-    randomInterval = randomIntFromInterval(startTimeInterval, endTimeInterval);
-    document.getElementById('start-btn').textContent = 'Stop Work';
+    //begin screen shotting
     cron();
   } else {
-    elapsedSessionTime = parseHrtimeToSeconds(process.hrtime(sessionTimer));
+    //stop timer
+    elapsedSessionTime = parseHrtime(sessionTimer);
+    //log session data to DO
     sendLogData()
     //prompts border to stop
     ipcRenderer.send('stop-timelapse')
-    document.getElementById('work-status').textContent = ""
-    document.getElementById('start-btn').textContent = 'Start Work';
     clearInterval(cronInterval);
     randomInterval = null;
     cronInterval = null;
@@ -169,15 +150,14 @@ logoutBtn.addEventListener('click', event => {
   logout();
 });
 
-function sendLogData() {
+async function sendLogData() {
   var log = {
     'screenshotsTaken' : screenshotsTaken,
     'screenshotsSent' : screenshotsSent,
-    'sessionTimeSec' : elapsedSessionTime
+    'sessionTimeSec' : elapsedSessionTime,
+    'keystrokes' : keystrokes
   }
-
   console.log(log)
-
   const params = {
     Body: JSON.stringify(log),
     Bucket: 'alteredstack/dd/' + store.get("user.id") + '/' + group_date,
@@ -185,15 +165,28 @@ function sendLogData() {
     ContentType: "application/json"
   };
 
-  s3.putObject(params, function(err, data) {
-    console.log(JSON.stringify(err) + " " + JSON.stringify(data))
-  })
-
-  screenshotsTaken = 0
-  screenshotsSent = 0
+  await uploadToDO(params)
+  .then((data) => console.log(JSON.stringify(data)))
+  .catch((err) => console.log(JSON.stringify(err)))
 }
 
-function parseHrtimeToSeconds(hrtime) {
-  var seconds = (hrtime[0] + (hrtime[1] / 1e9)).toFixed(3);
-  return seconds;
+function parseHrtime(hrtime) {
+  var seconds = process.hrtime(hrtime)
+  return seconds[0];
+}
+
+function uploadToDO(params) {
+  return new Promise(resolve => console.log('hello'))//s3.putObject(params).promise()
+}
+
+function changeWorkInterface(hasStarted){
+  if (hasStarted){
+    document.getElementById('work-status').textContent = "Start coding!!! :) Work has started"
+    randomInterval = randomIntFromInterval(startTimeInterval, endTimeInterval);
+    document.getElementById('start-btn').textContent = 'Stop Work';
+  }
+  else{
+    document.getElementById('work-status').textContent = ""
+    document.getElementById('start-btn').textContent = 'Start Work';
+  }
 }
