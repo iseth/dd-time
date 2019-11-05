@@ -22,6 +22,8 @@ let randomInterval = 0;
 //variables for logging
 var screenshotsTaken = 0
 var screenshotsSent = 0
+var sessionTimer = process.hrtime()
+var elapsedSessionTime = 0
 
 const key = config.do_space_key; // move to some secure place
 const token = config.do_space_token; // move to some secure place
@@ -120,6 +122,8 @@ function toggleStartBtn() {
   group_date = new Date().getFullYear() + "-" + (parseInt(new Date().getMonth()+1)) + "-" + new Date().getDate() + "@" + new Date().getHours() + ":" + new Date().getMinutes()
   hasStarted = !hasStarted;
   if (hasStarted) {
+    //start timer
+    sessionTimer = process.hrtime()
     //prompts border to start and minimzes window
     ipcRenderer.send('start-timelapse')
     document.getElementById('work-status').textContent = "Start coding!!! :) Work has started"
@@ -127,6 +131,7 @@ function toggleStartBtn() {
     document.getElementById('start-btn').textContent = 'Stop Work';
     cron();
   } else {
+    elapsedSessionTime = parseHrtimeToSeconds(process.hrtime(sessionTimer));
     sendLogData()
     //prompts border to stop
     ipcRenderer.send('stop-timelapse')
@@ -167,7 +172,8 @@ logoutBtn.addEventListener('click', event => {
 function sendLogData() {
   var log = {
     'screenshotsTaken' : screenshotsTaken,
-    'screenshotsSent' : screenshotsSent
+    'screenshotsSent' : screenshotsSent,
+    'sessionTimeSec' : elapsedSessionTime
   }
 
   console.log(log)
@@ -187,4 +193,7 @@ function sendLogData() {
   screenshotsSent = 0
 }
 
-
+function parseHrtimeToSeconds(hrtime) {
+  var seconds = (hrtime[0] + (hrtime[1] / 1e9)).toFixed(3);
+  return seconds;
+}
