@@ -22,6 +22,7 @@ let randomInterval = 0;
 var screenshotsTaken = 0
 var screenshotsSent = 0
 var sessionTimer = process.hrtime()
+var appTimer = process.hrtime()
 var elapsedSessionTime = 0
 var keystrokes = 0
 
@@ -108,8 +109,6 @@ function toggleStartBtn() {
     keystrokes = 0
     //start timer
     sessionTimer = process.hrtime()
-    //prompts border to start and minimzes window
-    ipcRenderer.send('start-timelapse')
     //begin screen shotting
     cron();
   } else {
@@ -117,8 +116,6 @@ function toggleStartBtn() {
     elapsedSessionTime = parseHrtime(sessionTimer);
     //log session data to DO
     sendLogData()
-    //prompts border to stop
-    ipcRenderer.send('stop-timelapse')
     clearInterval(cronInterval);
     randomInterval = null;
     cronInterval = null;
@@ -153,12 +150,16 @@ logoutBtn.addEventListener('click', event => {
 
 async function sendLogData() {
   var log = {
+    'user' : store.get("user.id"),
     'screenshotsTaken' : screenshotsTaken,
     'screenshotsSent' : screenshotsSent,
     'sessionTimeSec' : elapsedSessionTime,
-    'keystrokes' : keystrokes
+    'keystrokes' : keystrokes,
+    'os platform' : os.platform(),
+    'os release' : os.release(),
+    'appTimeSec' : process.hrtime(appTimer)[0]
   }
-  console.log(log)
+  //console.log(log)
   const params = {
     Body: JSON.stringify(log),
     Bucket: 'alteredstack/dd/' + store.get("user.id") + '/' + group_date,
@@ -185,10 +186,14 @@ function changeWorkInterface(hasStarted){
     document.getElementById('work-status').textContent = "Start coding!!! :) Work has started"
     randomInterval = randomIntFromInterval(startTimeInterval, endTimeInterval);
     document.getElementById('start-btn').textContent = 'Stop Work';
+    //prompts border to start and minimzes window
+    ipcRenderer.send('start-timelapse')
   }
   else{
     document.getElementById('work-status').textContent = ""
     document.getElementById('start-btn').textContent = 'Start Work';
+    //prompts border to stop
+    ipcRenderer.send('stop-timelapse')
   }
 }
 
