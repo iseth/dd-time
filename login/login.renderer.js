@@ -41,7 +41,7 @@ function action() {
 
     sgMail.setApiKey(config.SENDGRID_API_KEY);
 
-    myConsole.log(code)
+    // myConsole.log(code)
 
     var msg = {
       to: email,
