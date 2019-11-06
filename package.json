@@ -25,19 +25,33 @@
   "license": "ISC",
   "devDependencies": {
     "dotenv": "^8.2.0",
-    "electron": "^7.0.0",
-    "electron-builder": "^22.1.0"
+    "electron-builder": "^22.1.0",
+    "node-abi": "^2.12.0"
   },
   "dependencies": {
     "@sendgrid/mail": "^6.4.0",
-    "aws-sdk": "^2.558.0",
+    "aws-sdk": "^2.564.0",
     "crypto": "^1.0.1",
-    "electron-store": "^5.0.0",
+    "electron": "^6.0.0",
+    "electron-store": "^5.1.0",
     "fs": "0.0.1-security",
-    "imagemin": "^7.0.0",
-    "imagemin-optipng": "^7.1.0",
-    "imagemin-pngquant": "^8.0.0",
+    "iohook": "^0.6.1",
     "os": "^0.1.1",
     "path": "^0.12.7"
+  },
+  "iohook": {
+    "targets": [
+      "node-72",
+      "electron-73"
+    ],
+    "platforms": [
+      "win32",
+      "darwin",
+      "linux"
+    ],
+    "arches": [
+      "x64",
+      "ia32"
+    ]
   }
 }

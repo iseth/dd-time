@@ -1,4 +1,5 @@
-const {app, BrowserWindow, ipcMain, screen} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
+const electron = require('electron')
 
 var mainWindow = null
 var login = null
@@ -35,7 +36,7 @@ function createWindows() {
 }
 
 function createBorder() {
-    const { width, height } = screen.getPrimaryDisplay().workAreaSize
+    const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize
 
     border = new BrowserWindow({
         frame: false,
