@@ -1,0 +1,141 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'install', '-g', 'n', 'v12.7.0' ]
+2 info using npm@3.5.2
+3 info using node@v8.10.0
+4 silly loadCurrentTree Starting
+5 silly install loadCurrentTree
+6 silly install readGlobalPackageData
+7 silly fetchPackageMetaData n
+8 silly fetchPackageMetaData v12.7.0
+9 silly fetchNamedPackageData n
+10 silly mapToRegistry name n
+11 silly mapToRegistry using default registry
+12 silly mapToRegistry registry https://registry.npmjs.org/
+13 silly mapToRegistry uri https://registry.npmjs.org/n
+14 silly fetchNamedPackageData v12.7.0
+15 silly mapToRegistry name v12.7.0
+16 silly mapToRegistry using default registry
+17 silly mapToRegistry registry https://registry.npmjs.org/
+18 silly mapToRegistry uri https://registry.npmjs.org/v12.7.0
+19 verbose request uri https://registry.npmjs.org/v12.7.0
+20 verbose request no auth needed
+21 info attempt registry request try #1 at 8:23:26 AM
+22 verbose request id 93c8454f75aeeb92
+23 http request GET https://registry.npmjs.org/v12.7.0
+24 verbose request uri https://registry.npmjs.org/n
+25 verbose request no auth needed
+26 info attempt registry request try #1 at 8:23:26 AM
+27 verbose etag W/"ddda8e1d73f906e07a36514b4c3caf67"
+28 verbose lastModified Fri, 25 Oct 2019 07:47:44 GMT
+29 http request GET https://registry.npmjs.org/n
+30 http 304 https://registry.npmjs.org/n
+31 verbose headers { date: 'Thu, 07 Nov 2019 16:23:26 GMT',
+31 verbose headers   connection: 'keep-alive',
+31 verbose headers   'set-cookie':
+31 verbose headers    [ '__cfduid=df92fd81caa972b9a07667082cbaacd171573143806; expires=Fri, 06-Nov-20 16:23:26 GMT; path=/; domain=.npmjs.org; HttpOnly' ],
+31 verbose headers   'cf-cache-status': 'HIT',
+31 verbose headers   'cache-control': 'max-age=300',
+31 verbose headers   'cf-ray': '5320a6d4ba773892-ATL',
+31 verbose headers   age: '5628',
+31 verbose headers   etag: '"ddda8e1d73f906e07a36514b4c3caf67"',
+31 verbose headers   'expect-ct': 'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+31 verbose headers   'last-modified': 'Fri, 25 Oct 2019 07:47:44 GMT',
+31 verbose headers   vary: 'accept-encoding, accept',
+31 verbose headers   'x-amz-meta-rev': '381-e2a6883e833f09b941689425e4a6172f',
+31 verbose headers   server: 'cloudflare' }
+32 silly get cb [ 304,
+32 silly get   { date: 'Thu, 07 Nov 2019 16:23:26 GMT',
+32 silly get     connection: 'keep-alive',
+32 silly get     'set-cookie':
+32 silly get      [ '__cfduid=df92fd81caa972b9a07667082cbaacd171573143806; expires=Fri, 06-Nov-20 16:23:26 GMT; path=/; domain=.npmjs.org; HttpOnly' ],
+32 silly get     'cf-cache-status': 'HIT',
+32 silly get     'cache-control': 'max-age=300',
+32 silly get     'cf-ray': '5320a6d4ba773892-ATL',
+32 silly get     age: '5628',
+32 silly get     etag: '"ddda8e1d73f906e07a36514b4c3caf67"',
+32 silly get     'expect-ct': 'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+32 silly get     'last-modified': 'Fri, 25 Oct 2019 07:47:44 GMT',
+32 silly get     vary: 'accept-encoding, accept',
+32 silly get     'x-amz-meta-rev': '381-e2a6883e833f09b941689425e4a6172f',
+32 silly get     server: 'cloudflare' } ]
+33 verbose etag https://registry.npmjs.org/n from cache
+34 verbose get saving n to /home/xxkenta/.npm/registry.npmjs.org/n/.cache.json
+35 http 404 https://registry.npmjs.org/v12.7.0
+36 verbose headers { date: 'Thu, 07 Nov 2019 16:23:27 GMT',
+36 verbose headers   'content-type': 'application/json',
+36 verbose headers   'content-length': '21',
+36 verbose headers   connection: 'keep-alive',
+36 verbose headers   'set-cookie':
+36 verbose headers    [ '__cfduid=dee51ea3ab9d9f4393ee713eae55a7dc01573143806; expires=Fri, 06-Nov-20 16:23:26 GMT; path=/; domain=.npmjs.org; HttpOnly' ],
+36 verbose headers   'cf-cache-status': 'MISS',
+36 verbose headers   'cache-control': 'max-age=300',
+36 verbose headers   'cf-ray': '5320a6d4bbb4ba46-ATL',
+36 verbose headers   'expect-ct': 'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+36 verbose headers   vary: 'accept-encoding, accept',
+36 verbose headers   server: 'cloudflare' }
+37 silly get cb [ 404,
+37 silly get   { date: 'Thu, 07 Nov 2019 16:23:27 GMT',
+37 silly get     'content-type': 'application/json',
+37 silly get     'content-length': '21',
+37 silly get     connection: 'keep-alive',
+37 silly get     'set-cookie':
+37 silly get      [ '__cfduid=dee51ea3ab9d9f4393ee713eae55a7dc01573143806; expires=Fri, 06-Nov-20 16:23:26 GMT; path=/; domain=.npmjs.org; HttpOnly' ],
+37 silly get     'cf-cache-status': 'MISS',
+37 silly get     'cache-control': 'max-age=300',
+37 silly get     'cf-ray': '5320a6d4bbb4ba46-ATL',
+37 silly get     'expect-ct': 'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+37 silly get     vary: 'accept-encoding, accept',
+37 silly get     server: 'cloudflare' } ]
+38 silly fetchPackageMetaData Error: Not found : v12.7.0
+38 silly fetchPackageMetaData     at makeError (/usr/share/npm/node_modules/npm-registry-client/lib/request.js:264:12)
+38 silly fetchPackageMetaData     at CachingRegistryClient.<anonymous> (/usr/share/npm/node_modules/npm-registry-client/lib/request.js:252:14)
+38 silly fetchPackageMetaData     at Request._callback (/usr/share/npm/node_modules/npm-registry-client/lib/request.js:172:14)
+38 silly fetchPackageMetaData     at Request.self.callback (/usr/share/npm/node_modules/request/request.js:198:22)
+38 silly fetchPackageMetaData     at emitTwo (events.js:126:13)
+38 silly fetchPackageMetaData     at Request.emit (events.js:214:7)
+38 silly fetchPackageMetaData     at Request.<anonymous> (/usr/share/npm/node_modules/request/request.js:1082:10)
+38 silly fetchPackageMetaData     at emitOne (events.js:121:20)
+38 silly fetchPackageMetaData     at Request.emit (events.js:211:7)
+38 silly fetchPackageMetaData     at IncomingMessage.<anonymous> (/usr/share/npm/node_modules/request/request.js:1009:12)
+38 silly fetchPackageMetaData  error for v12.7.0 { Error: Not found : v12.7.0
+38 silly fetchPackageMetaData     at makeError (/usr/share/npm/node_modules/npm-registry-client/lib/request.js:264:12)
+38 silly fetchPackageMetaData     at CachingRegistryClient.<anonymous> (/usr/share/npm/node_modules/npm-registry-client/lib/request.js:252:14)
+38 silly fetchPackageMetaData     at Request._callback (/usr/share/npm/node_modules/npm-registry-client/lib/request.js:172:14)
+38 silly fetchPackageMetaData     at Request.self.callback (/usr/share/npm/node_modules/request/request.js:198:22)
+38 silly fetchPackageMetaData     at emitTwo (events.js:126:13)
+38 silly fetchPackageMetaData     at Request.emit (events.js:214:7)
+38 silly fetchPackageMetaData     at Request.<anonymous> (/usr/share/npm/node_modules/request/request.js:1082:10)
+38 silly fetchPackageMetaData     at emitOne (events.js:121:20)
+38 silly fetchPackageMetaData     at Request.emit (events.js:211:7)
+38 silly fetchPackageMetaData     at IncomingMessage.<anonymous> (/usr/share/npm/node_modules/request/request.js:1009:12) pkgid: 'v12.7.0', statusCode: 404, code: 'E404' }
+39 silly rollbackFailedOptional Starting
+40 silly rollbackFailedOptional Finishing
+41 silly runTopLevelLifecycles Starting
+42 silly runTopLevelLifecycles Finishing
+43 silly install printInstalled
+44 verbose stack Error: Not found : v12.7.0
+44 verbose stack     at makeError (/usr/share/npm/node_modules/npm-registry-client/lib/request.js:264:12)
+44 verbose stack     at CachingRegistryClient.<anonymous> (/usr/share/npm/node_modules/npm-registry-client/lib/request.js:252:14)
+44 verbose stack     at Request._callback (/usr/share/npm/node_modules/npm-registry-client/lib/request.js:172:14)
+44 verbose stack     at Request.self.callback (/usr/share/npm/node_modules/request/request.js:198:22)
+44 verbose stack     at emitTwo (events.js:126:13)
+44 verbose stack     at Request.emit (events.js:214:7)
+44 verbose stack     at Request.<anonymous> (/usr/share/npm/node_modules/request/request.js:1082:10)
+44 verbose stack     at emitOne (events.js:121:20)
+44 verbose stack     at Request.emit (events.js:211:7)
+44 verbose stack     at IncomingMessage.<anonymous> (/usr/share/npm/node_modules/request/request.js:1009:12)
+45 verbose statusCode 404
+46 verbose pkgid v12.7.0
+47 verbose cwd /home/xxkenta/dd-time
+48 error Linux 5.0.0-32-generic
+49 error argv "/usr/bin/node" "/usr/bin/npm" "install" "-g" "n" "v12.7.0"
+50 error node v8.10.0
+51 error npm  v3.5.2
+52 error code E404
+53 error 404 Not found : v12.7.0
+54 error 404
+55 error 404 'v12.7.0' is not in the npm registry.
+56 error 404 You should bug the author to publish it (or use the name yourself!)
+57 error 404 Note that you can also install from a
+58 error 404 tarball, folder, http url, or git url.
+59 verbose exit [ 1, true ]

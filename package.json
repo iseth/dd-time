@@ -16,13 +16,17 @@
     "productName": "Timelapser",
     "win": {
       "target": "nsis",
-      "publish" : ["github"]
+      "publish": [
+        "github"
+      ]
     },
     "linux": {
       "target": [
         "snap"
       ],
-      "publish" : ["github"]
+      "publish": [
+        "github"
+      ]
     }
   },
   "author": "",
@@ -57,5 +61,9 @@
       "x64",
       "ia32"
     ]
+  },
+  "cmake-js": {
+    "runtime": "electron",
+    "runtimeVersion": "6.0.0"
   }
 }
