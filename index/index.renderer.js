@@ -99,10 +99,10 @@ function randomIntFromInterval(min, max) {
 }
 
 function toggleStartBtn() {
-  group_date = new Date().getFullYear() + "-" + (parseInt(new Date().getMonth()+1)) + "-" + new Date().getDate() + "@" + new Date().getHours() + ":" + new Date().getMinutes()
   hasStarted = !hasStarted;
   changeWorkInterface(hasStarted)
   if (hasStarted) {
+    group_date = new Date().getFullYear() + "-" + (parseInt(new Date().getMonth()+1)) + "-" + new Date().getDate() + "@" + new Date().getHours() + ":" + new Date().getMinutes()
     //reset logging
     screenshotsTaken = 0
     screenshotsSent = 0
