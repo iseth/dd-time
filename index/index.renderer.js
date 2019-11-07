@@ -25,6 +25,11 @@ var sessionTimer = process.hrtime()
 var appTimer = process.hrtime()
 var elapsedSessionTime = 0
 var keystrokes = 0
+var prevX = 0
+var prevY = 0
+var currX = 0
+var currY = 0
+var totalDistance = 0
 
 const key = config.do_space_key; // move to some secure place
 const token = config.do_space_token; // move to some secure place
@@ -102,13 +107,7 @@ function toggleStartBtn() {
   hasStarted = !hasStarted;
   changeWorkInterface(hasStarted)
   if (hasStarted) {
-    group_date = new Date().getFullYear() + "-" + (parseInt(new Date().getMonth()+1)) + "-" + new Date().getDate() + "@" + new Date().getHours() + ":" + new Date().getMinutes()
-    //reset logging
-    screenshotsTaken = 0
-    screenshotsSent = 0
-    keystrokes = 0
-    //start timer
-    sessionTimer = process.hrtime()
+    resetLogVars()
     //begin screen shotting
     cron();
   } else {
@@ -157,9 +156,10 @@ async function sendLogData() {
     'keystrokes' : keystrokes,
     'os platform' : os.platform(),
     'os release' : os.release(),
-    'appTimeSec' : process.hrtime(appTimer)[0]
+    'appTimeSec' : process.hrtime(appTimer)[0],
+    'mouseDistance' : totalDistance.toFixed(0) + " pixels"
   }
-  //console.log(log)
+  // console.log(log)
   const params = {
     Body: JSON.stringify(log),
     Bucket: 'alteredstack/dd/' + store.get("user.id") + '/' + group_date,
@@ -197,8 +197,29 @@ function changeWorkInterface(hasStarted){
   }
 }
 
+function resetLogVars() {
+  //sets date time for session
+  group_date = new Date().getFullYear() + "-" + (parseInt(new Date().getMonth()+1)) + "-" + new Date().getDate() + "@" + new Date().getHours() + ":" + new Date().getMinutes()
+  prevX = 0
+  prevY = 0
+  totalDistance = 0
+  screenshotsTaken = 0
+  screenshotsSent = 0
+  keystrokes = 0
+  sessionTimer = process.hrtime()
+}
+
 ioHook.on('keydown', event => {
   keystrokes += 1
+});
+
+ioHook.on('mouseclick', event => {
+    prevX = currX
+    prevY = currY
+    currX = event.x
+    currY = event.y
+
+    totalDistance += (Math.sqrt(Math.pow((currX - prevX),2)+Math.pow((currY - prevY),2)))
 });
 
 ioHook.start();
