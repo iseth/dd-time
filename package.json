@@ -7,18 +7,22 @@
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:win": "electron-builder build --win --publish never",
-    "build:linux": "electron-builder build --linux --publish never"
+    "publish:win": "electron-builder build --win --publish always",
+    "build:linux": "electron-builder build --linux --publish never",
+    "publish:linux": "electron-builder build --linux --publish always"
   },
   "build": {
     "appId": "com.devduo.timelapser",
     "productName": "Timelapser",
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "publish" : ["github"]
     },
     "linux": {
       "target": [
         "snap"
-      ]
+      ],
+      "publish" : ["github"]
     }
   },
   "author": "",
