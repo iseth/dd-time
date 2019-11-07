@@ -26,13 +26,13 @@
   "devDependencies": {
     "dotenv": "^8.2.0",
     "electron-builder": "^22.1.0",
-    "node-abi": "^2.12.0"
+    "node-abi": "^2.12.0",
+    "electron": "^6.0.0"
   },
   "dependencies": {
     "@sendgrid/mail": "^6.4.0",
     "aws-sdk": "^2.564.0",
     "crypto": "^1.0.1",
-    "electron": "^6.0.0",
     "electron-store": "^5.1.0",
     "fs": "0.0.1-security",
     "iohook": "^0.6.1",
