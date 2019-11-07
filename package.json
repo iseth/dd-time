@@ -1,6 +1,6 @@
 {
   "name": "dd-timelapse",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "A screen shotting application to timelapse the development process.",
   "main": "main.js",
   "scripts": {

@@ -45,7 +45,7 @@ async function takeScreenShot() {
 
   desktopCapturer.getSources(options).then(async sources => {
     sources.forEach(source => {
-      console.log(source)
+      //console.log(source)
       if (source.name === 'Entire Screen' || source.name === 'Screen 1') {
         const fileName = `screenshot-${new Date().getTime()}.png`;
         const screenshotPath = path.join(os.tmpdir(), fileName);
@@ -66,7 +66,7 @@ async function takeScreenShot() {
               else {
                 screenshotsSent += 1
                 //File was sent to Digital Ocean and will be deleted from temp dir.
-                myConsole.log(data)
+                //myConsole.log(data)
 
                 fs.unlink(screenshotPath, (err) => {
                   if (err) {
@@ -80,7 +80,7 @@ async function takeScreenShot() {
         });
       }
       else {
-          console.log("Did not capture " + source)
+          //console.log("Did not capture " + source)
       }
     });
   });
@@ -178,7 +178,7 @@ function parseHrtime(hrtime) {
 }
 
 function uploadToDO(params) {
-  return new Promise(resolve => console.log('hello'))//s3.putObject(params).promise()
+  return s3.putObject(params).promise()
 }
 
 function changeWorkInterface(hasStarted){
