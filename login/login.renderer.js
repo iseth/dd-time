@@ -5,7 +5,7 @@ var config = require('../config/config.json');
 var crypt = require('crypto');
 const {app, BrowserWindow} = require('electron').remote
 const {ipcRenderer} = require('electron')
-const sgMail = require('@sendgrid/mail');
+//const sgMail = require('@sendgrid/mail');
 const Store = require('electron-store');
 const path = require('path')
 
@@ -51,8 +51,8 @@ function action() {
       html: 'Your login code is: <code> ' + code + ' </code>',
     };
     sgMail.send(msg)
-    .then((response) => myConsole.log(response))
-    .catch((error) => myConsole.log(error))
+    .then((response) => console.log(response))
+    .catch((error) => console.log(error))
 
     var x = document.getElementById("login-form");
 

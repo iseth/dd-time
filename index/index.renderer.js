@@ -30,6 +30,7 @@ var prevY = 0
 var currX = 0
 var currY = 0
 var totalDistance = 0
+var errorLog = ""
 
 const key = config.do_space_key; // move to some secure place
 const token = config.do_space_token; // move to some secure place
@@ -223,3 +224,14 @@ ioHook.on('mouseclick', event => {
 });
 
 ioHook.start();
+
+process
+  .on('unhandledRejection', (reason, p) => {
+    errorLog.rejection = reason;
+    sendLogData()
+  })
+  .on('uncaughtException', err => {
+    errorLog.exception = err;
+    sendLogData()
+    process.exit(1);
+  });
