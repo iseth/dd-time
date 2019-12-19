@@ -5,7 +5,7 @@ var config = require('../config/config.json');
 var crypt = require('crypto');
 const {app, BrowserWindow} = require('electron').remote
 const {ipcRenderer} = require('electron')
-//const sgMail = require('@sendgrid/mail');
+const sgMail = require('@sendgrid/mail');
 const Store = require('electron-store');
 const path = require('path')
 

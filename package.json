@@ -29,9 +29,20 @@
       ]
     },
     "snap": {
-      "plugs": ["default"],
-      "buildPackages": ["libx11-dev", "libxtst-dev", "libxt-dev", "libx11-xcb-dev", "libxkbcommon-dev", "libxkbcommon-x11-dev"],
-      "stagePackages": ["libxkbcommon-x11-0"]
+      "plugs": [
+        "default"
+      ],
+      "buildPackages": [
+        "libx11-dev",
+        "libxtst-dev",
+        "libxt-dev",
+        "libx11-xcb-dev",
+        "libxkbcommon-dev",
+        "libxkbcommon-x11-dev"
+      ],
+      "stagePackages": [
+        "libxkbcommon-x11-0"
+      ]
     }
   },
   "author": "",
