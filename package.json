@@ -58,6 +58,7 @@
     "aws-sdk": "^2.566.0",
     "crypto": "^1.0.1",
     "electron-store": "^5.1.0",
+    "electron-unhandled": "^3.0.1",
     "fs": "0.0.1-security",
     "iohook": "^0.6.1",
     "os": "^0.1.1",

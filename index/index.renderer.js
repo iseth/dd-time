@@ -1,17 +1,20 @@
 var nodeConsole = require('console');
 var myConsole = new nodeConsole.Console(process.stdout, process.stderr);
-
 const { app, screen, shell } = require('electron').remote;
 const {ipcRenderer, desktopCapturer} = require('electron')
+const Store  = require('electron-store');
+store = new Store(app.getPath('userData') + '/config.json')
+
+var errorLog = {}
+const unhandled = require('electron-unhandled');
+unhandled({logger: (error) => sendErrorData(error)});
+
 var config = require('../config/config.json');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const AWS = require('aws-sdk');
-const Store  = require('electron-store');
-//const ioHook = require('iohook')
-//worried this may only work on windows due to OSX path structure
-store = new Store(app.getPath('userData') + '/config.json')
+const ioHook = require('iohook')
 
 var group_date = "";
 var hasStarted = false;
@@ -30,7 +33,6 @@ var prevY = 0
 var currX = 0
 var currY = 0
 var totalDistance = 0
-var errorLog = ""
 
 const key = config.do_space_key; // move to some secure place
 const token = config.do_space_token; // move to some secure place
@@ -108,6 +110,7 @@ function toggleStartBtn() {
   hasStarted = !hasStarted;
   changeWorkInterface(hasStarted)
   if (hasStarted) {
+    console.log("resetting vars")
     resetLogVars()
     //begin screen shotting
     cron();
@@ -158,8 +161,9 @@ async function sendLogData() {
     'os platform' : os.platform(),
     'os release' : os.release(),
     'appTimeSec' : process.hrtime(appTimer)[0],
-    'mouseDistance' : totalDistance.toFixed(0) + " pixels"
+    'mouseDistance' : totalDistance.toFixed(0) + " pixels",
   }
+
   // console.log(log)
   const params = {
     Body: JSON.stringify(log),
@@ -173,12 +177,32 @@ async function sendLogData() {
   .catch((err) => console.log(JSON.stringify(err)))
 }
 
+async function sendErrorData(error){
+
+  var errorfile = {
+    'errorLog' : error.stack
+  }
+
+  const params = {
+    Body: JSON.stringify(errorfile),
+    Bucket: 'alteredstack/dd/' + store.get("user.id") + '/' + 'errorLog-session-' + Date.now(),
+    Key: 'errors.json',
+    ContentType: "application/json"
+  };
+
+  await uploadToDO(params)
+  .then((data) => console.log(JSON.stringify(data)))
+  .catch((err) => console.log(JSON.stringify(err)))
+
+  console.log(errorfile)
+}
+
 function parseHrtime(hrtime) {
   var seconds = process.hrtime(hrtime)
   return seconds[0];
 }
 
-function uploadToDO(params) {
+async function uploadToDO(params) {
   return s3.putObject(params).promise()
 }
 
@@ -208,6 +232,7 @@ function resetLogVars() {
   screenshotsSent = 0
   keystrokes = 0
   sessionTimer = process.hrtime()
+  errorLog = ""
 }
 
 ioHook.on('keydown', event => {
@@ -227,11 +252,13 @@ ioHook.start();
 
 process
   .on('unhandledRejection', (reason, p) => {
+    console.log(reason)
     errorLog.rejection = reason;
-    sendLogData()
+    sendErrorData()
   })
   .on('uncaughtException', err => {
+    console.log(err)
     errorLog.exception = err;
-    sendLogData()
+    sendErrorData()
     process.exit(1);
   });
